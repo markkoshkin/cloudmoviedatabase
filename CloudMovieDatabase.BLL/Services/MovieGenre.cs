@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudMovieDatabase.BLL.Services
 {
-    public  class  ActorService
+    class MovieGenre
     {
-        public  async Task Test()
-        {
-
-        }
     }
 }
