@@ -27,7 +27,7 @@ namespace CloudMovieDatabase.API.Controllers
         /// <param name="take"></param>
         /// <param name="isAttachMovies"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("api/Actors/GetAll/{skip:int}")]
         public async Task<List<Actor>> GetAll(int skip = 0, int take = 10, bool isAttachMovies = false)
         {
             return await _actorService.GetAllAsync(skip, take, isAttachMovies);
