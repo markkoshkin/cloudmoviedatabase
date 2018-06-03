@@ -24,9 +24,19 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<T>> AllAsync()
+        public async Task<List<T>> AllAsync(int skip = 0, int take = 10, params Expression<Func<T, object>>[] includes)
         {
-            return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
+            IQueryable<T> query = _dbContext.Set<T>().AsNoTracking();
+
+            query.Skip(skip);
+            query.Skip(take);
+
+            if (includes.Any())
+            {
+                includes.ToList().ForEach(i => query = query.Include(i));
+            }
+
+            return await query.ToListAsync();
         }
 
         public virtual async Task DeleteAsync(T entity)
@@ -39,6 +49,18 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
         {
             _dbContext.Set<T>().Update(entity);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<T> FindByAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbContext.Set<T>().AsNoTracking();
+
+            if (includes.Any())
+            {
+                includes.ToList().ForEach(i => query = query.Include(i));
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
         }
 
         //public async List<List<T>> All(IOrderedQueryable<T> orderBy = null, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)

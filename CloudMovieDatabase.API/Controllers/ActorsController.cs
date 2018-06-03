@@ -30,33 +30,49 @@ namespace CloudMovieDatabase.API.Controllers
         [HttpGet]
         public async Task<List<Actor>> GetAll(int skip = 0, int take = 10, bool isAttachMovies = false)
         {
-            
-            return await _actorService.GetAll(skip, take, isAttachMovies);
+            return await _actorService.GetAllAsync(skip, take, isAttachMovies);
         }
 
-
-        //[HttpGet]
-        //public async Task<Actor> GetActorById(Guid id, bool isAttachMovies = true)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [HttpGet]
+        public async Task<Actor> GetActorById(Guid id, bool isAttachMovies = true)
+        {
+            return await _actorService.FindByIdAsync(id, isAttachMovies);
+        }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
+            await _actorService.DeleteByIdAsync(id);
             return Ok();
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(Actor actor)
         {
-            return StatusCode(201);
+            if (ModelState.IsValid)
+            {
+                await _actorService.CreateAsync(actor);
+                return StatusCode(201);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Put(Actor actor)
         {
-            return Ok();
+            if (ModelState.IsValid)
+            {
+                await _actorService.UpdateAsync(actor);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+
         }
     }
 }

@@ -13,8 +13,8 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
         //    Expression<Func<T, bool>> filter = null,
         //    params Expression<Func<T, object>>[] includes);
 
-        //Task<T> FindBy(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
-        Task<List<T>> AllAsync();
+        Task<T> FindByAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+        Task<List<T>> AllAsync(int skip, int take, params Expression<Func<T, object>>[] includes);
         Task AddAsync(T entity);
         Task DeleteAsync(T entity);
         Task EditAsync(T entity);

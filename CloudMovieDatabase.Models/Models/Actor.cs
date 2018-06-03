@@ -18,5 +18,7 @@ namespace CloudMovieDatabase.Models
         public string LastName { get; set; }
 
         public DateTime Birthday { get; set; }
+
+        public List<Movie> Filmography { get; set; }
     }
 }
