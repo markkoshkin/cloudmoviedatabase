@@ -40,7 +40,7 @@ namespace CloudMovieDatabase.API
 
             // Services 
             services.AddTransient<MovieService, MovieService>();
-            services.AddTransient<MovieGenre, MovieGenre>();
+            services.AddTransient<MovieGenreService, MovieGenreService>();
             services.AddTransient<ActorService, ActorService>();
         }
 

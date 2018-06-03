@@ -6,9 +6,9 @@ using CloudMovieDatabase.Models;
 
 namespace CloudMovieDatabase.BLL.Services
 {
-    public class MovieService
+    public class MovieGenreService
     {
-        public Task<List<Movie>> GetAll(int skip, int take, bool isAttachMovies)
+        public Task<List<MovieGenre>> GetAll()
         {
             throw new NotImplementedException();
         }
