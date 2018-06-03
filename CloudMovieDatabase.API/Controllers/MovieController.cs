@@ -24,7 +24,7 @@ namespace CloudMovieDatabase.API.Controllers
         [HttpGet]
         public async Task<List<Movie>> GetAll(int skip = 0, int take = 10, bool isAttachMovies = false)
         {
-            return await _movieService.GetAll(skip, take, isAttachMovies);
+            return await _movieService.GetAllAsync(skip, take, isAttachMovies);
         }
 
         //[HttpGet]

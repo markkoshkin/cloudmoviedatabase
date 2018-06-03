@@ -86,6 +86,7 @@ namespace CloudMovieDatabase.BLL.Services
 
         public async Task CreateAsync(Actor actor)
         {
+            actor.Id = Guid.NewGuid();
             await _actorRepository.AddAsync(actor);
         }
     }
