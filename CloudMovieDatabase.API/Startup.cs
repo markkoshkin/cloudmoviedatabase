@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudMovieDatabase.BLL.Services;
 using CloudMovieDatabase.DAL;
 using CloudMovieDatabase.DAL.Repositories.Abstractions;
 using CloudMovieDatabase.DAL.Repositories.Implementations;
@@ -32,7 +33,15 @@ namespace CloudMovieDatabase.API
 
             services.AddMvc();
 
-            services.AddTransient<IActorRepository, ActorRepository>();
+            // Repositories
+            services.AddScoped<IMovieRepository, MovieRepository>();
+            services.AddScoped<IMovieGenreRepository, MovieGenreRepository>();
+            services.AddScoped<IActorRepository, ActorRepository>();
+
+            // Services 
+            services.AddTransient<MovieService, MovieService>();
+            services.AddTransient<MovieGenre, MovieGenre>();
+            services.AddTransient<ActorService, ActorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

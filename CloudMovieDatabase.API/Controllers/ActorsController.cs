@@ -35,11 +35,11 @@ namespace CloudMovieDatabase.API.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<Actor> GetActorById(Guid id, bool isAttachMovies = true)
-        {
-            throw new NotImplementedException();
-        }
+        //[HttpGet]
+        //public async Task<Actor> GetActorById(Guid id, bool isAttachMovies = true)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
