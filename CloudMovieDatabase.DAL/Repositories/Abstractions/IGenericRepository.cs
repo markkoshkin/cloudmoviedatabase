@@ -14,9 +14,9 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
         //    params Expression<Func<T, object>>[] includes);
 
         //Task<T> FindBy(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
-        Task<List<T>> All();
-        Task Add(T entity);
-        Task Delete(T entity);
-        Task Edit(T entity);
+        Task<List<T>> AllAsync();
+        Task AddAsync(T entity);
+        Task DeleteAsync(T entity);
+        Task EditAsync(T entity);
     }
 }

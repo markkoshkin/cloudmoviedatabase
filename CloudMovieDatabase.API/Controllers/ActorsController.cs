@@ -13,6 +13,13 @@ namespace CloudMovieDatabase.API.Controllers
     [Route("api/Actors")]
     public class ActorsController : Controller
     {
+        private ActorService _actorService;
+
+        public ActorsController(ActorService actorService)
+        {
+            _actorService = actorService;
+        }
+
         /// <summary>
         /// Action to return all actors 
         /// </summary>
@@ -21,16 +28,17 @@ namespace CloudMovieDatabase.API.Controllers
         /// <param name="isAttachMovies"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<List<Actor>> GetActors(int skip = 0, int take = 10, bool isAttachMovies = false)
+        public async Task<List<Actor>> GetAll(int skip = 0, int take = 10, bool isAttachMovies = false)
         {
-           
+            
+            return await _actorService.GetAll(skip, take, isAttachMovies);
         }
-        
+
 
         [HttpGet]
         public async Task<Actor> GetActorById(Guid id, bool isAttachMovies = true)
         {
-
+            throw new NotImplementedException();
         }
 
         [HttpDelete]

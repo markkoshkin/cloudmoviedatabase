@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CloudMovieDatabase.DAL;
+using CloudMovieDatabase.DAL.Repositories.Abstractions;
+using CloudMovieDatabase.DAL.Repositories.Implementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,8 @@ namespace CloudMovieDatabase.API
                      options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc();
+
+            services.AddTransient<IActorRepository, ActorRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

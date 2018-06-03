@@ -17,4 +17,10 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CloudMovieDatabase.BLL\CloudMovieDatabase.BLL.csproj" />
+    <ProjectReference Include="..\CloudMovieDatabase.DAL\CloudMovieDatabase.DAL.csproj" />
+    <ProjectReference Include="..\CloudMovieDatabase.Models\CloudMovieDatabase.Models.csproj" />
+  </ItemGroup>
+
 </Project>
