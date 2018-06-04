@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CloudMovieDatabase.API.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Actors")]
+    [Route("api/[controller]")]
     public class ActorsController : Controller
     {
         private ActorService _actorService;
@@ -20,20 +20,14 @@ namespace CloudMovieDatabase.API.Controllers
             _actorService = actorService;
         }
 
-        /// <summary>
-        /// Action to return all actors 
-        /// </summary>
-        /// <param name="skip"></param>
-        /// <param name="take"></param>
-        /// <param name="isAttachMovies"></param>
-        /// <returns></returns>
-        [HttpGet("api/Actors/GetAll/{skip:int}")]
-        public async Task<List<Actor>> GetAll(int skip = 0, int take = 10, bool isAttachMovies = false)
+        [HttpGet("GetAll")]//api/actors/getall2?skip=2&take=15&isAttachMovies=true
+        public async Task<List<Actor>> GetAll2(int skip = 0, int take = 10, bool isAttachMovies = false)
         {
-            return await _actorService.GetAllAsync(skip, take, isAttachMovies);
+            return await _actorService.GetAllAsync(0, 0,false);
         }
 
         [HttpGet]
+        [Route("GetActorById/{id:guid}/{isAttachMovies:bool?}")]///api/actors/GetActorById/af432a20-75a5-4e1d-bafc-ede9ac4ba5f4/false
         public async Task<Actor> GetActorById(Guid id, bool isAttachMovies = true)
         {
             return await _actorService.FindByIdAsync(id, isAttachMovies);
