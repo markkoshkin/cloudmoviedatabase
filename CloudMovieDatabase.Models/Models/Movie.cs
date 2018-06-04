@@ -21,7 +21,9 @@ namespace CloudMovieDatabase.Models
         [NotFutureYear(ErrorMessage = "Film can't be released in future")]
         public DateTime Year { get; set; }
 
-        public virtual MovieGenre Genre { get; set; }
+        public Guid GenreId { get; set; }
+
+        public MovieGenre Genre { get; set; }
 
         public List<ActorMovie> ActorMovie { get; set; }
 

@@ -26,10 +26,7 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
 
         public async Task<List<T>> AllAsync(int skip, int take, params Expression<Func<T, object>>[] includes)
         {
-            IQueryable<T> query = _dbContext.Set<T>().AsNoTracking();
-
-            query.Skip(skip);
-            query.Skip(take);
+            IQueryable<T> query = _dbContext.Set<T>().Skip(skip).Take(take).AsNoTracking();
 
             if (includes.Any())
             {

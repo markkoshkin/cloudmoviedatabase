@@ -37,5 +37,6 @@ namespace CloudMovieDatabase.DAL
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieGenre> MovieGenres { get; set; }
+        public DbSet<ActorMovie> ActorMovie { get; set; }
     }
 }

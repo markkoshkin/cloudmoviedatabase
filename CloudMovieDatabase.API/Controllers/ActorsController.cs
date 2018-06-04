@@ -20,10 +20,10 @@ namespace CloudMovieDatabase.API.Controllers
             _actorService = actorService;
         }
 
-        [HttpGet("GetAll")]//api/actors/getall2?skip=2&take=15&isAttachMovies=true
-        public async Task<List<Actor>> GetAll2(int skip = 0, int take = 10, bool isAttachMovies = false)
+        [HttpGet("GetAll")]//api/actors/getall?skip=2&take=15&isAttachMovies=true
+        public async Task<List<Actor>> GetAll(int skip = 0, int take = 10, bool isAttachMovies = false)
         {
-            return await _actorService.GetAllAsync(0, 0,false);
+            return await _actorService.GetAllAsync(skip, take, isAttachMovies);
         }
 
         [HttpGet]
