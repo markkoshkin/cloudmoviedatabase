@@ -15,11 +15,14 @@ namespace CloudMovieDatabase.BLL.Services
         private IMovieRepository _movieRepository;
         private IActorRepository _actorRepository;
         private IActorMovieRepository _actorMovieRepository;
+        private IMovieGenreRepository _movieGenreRepository;
 
-        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository, IActorMovieRepository actorMovieRepository)
+        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository, IActorMovieRepository actorMovieRepository, IMovieGenreRepository movieGenreRepository)
         {
             _movieRepository = movieRepository;
             _actorRepository = actorRepository;
+            _actorMovieRepository = actorMovieRepository;
+            _movieGenreRepository = movieGenreRepository;
         }
 
         public async Task<List<Movie>> GetAllAsync(int skip, int take)
@@ -72,6 +75,12 @@ namespace CloudMovieDatabase.BLL.Services
             if (movieUi.GenreId == Guid.Empty)
             {
                 throw new ArgumentException($"Genre can't be null");
+            }
+
+            var existedGenre = await _movieGenreRepository.FindByAsync(e => e.Id == movieUi.GenreId);
+            if (existedGenre == null)
+            {
+                throw new ArgumentException($"Genre with id : {movieUi.GenreId} not found");
             }
 
             existedEntity.GenreId = movieUi.GenreId;

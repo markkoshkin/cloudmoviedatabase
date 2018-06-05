@@ -20,7 +20,7 @@ namespace CloudMovieDatabase.API.Controllers
             _movieGenreService = movieGenreService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<List<MovieGenre>> GetAll(int skip = 0, int take = 10)
         {
             return await _movieGenreService.GetAllAsync(skip, take);

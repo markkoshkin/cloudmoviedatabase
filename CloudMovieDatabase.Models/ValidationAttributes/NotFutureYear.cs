@@ -7,7 +7,7 @@ namespace CloudMovieDatabase.Models.ValidationAttributes
     {
         public override bool IsValid(object value)
         {
-            return DateTime.Now.Year > Convert.ToDateTime(value).Year;
+            return DateTime.Now.Year >= Convert.ToDateTime(value).Year;
         }
     }
 }
