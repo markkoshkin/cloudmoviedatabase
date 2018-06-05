@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudMovieDatabase.BLL.Converters;
 using CloudMovieDatabase.BLL.Services;
 using CloudMovieDatabase.Models;
 using CloudMovieDatabase.Models.Models.UiModels;
@@ -16,11 +17,13 @@ namespace CloudMovieDatabase.API.Controllers
     {
         private ActorService _actorService;
         private ActorMovieService _actorMovieService;
+        private MovieService _movieService;
 
-        public ActorsController(ActorService actorService, ActorMovieService actorMovieService)
+        public ActorsController(ActorService actorService, ActorMovieService actorMovieService, MovieService movieService)
         {
             _actorService = actorService;
             _actorMovieService = actorMovieService;
+            _movieService = movieService;
         }
 
         [HttpGet("GetAll")]//api/actors/getall?skip=2&take=15
@@ -28,6 +31,15 @@ namespace CloudMovieDatabase.API.Controllers
         {
             return await _actorService.GetAllAsync(skip, take);
         }
+
+        [HttpGet]
+        [Route("GetActorsByMovieId/{id:guid}")]
+        public async Task<List<ActorUi>> GetActorsByMovieId(Guid id)
+        {
+            var movie = await _movieService.FindByIdAsync(id, true);
+            return movie.StarringActros.Select(e => e.ConvertToUIModel()).ToList();
+        }
+
 
         [HttpGet]
         [Route("GetActorById/{id:guid}/{isAttachMovies:bool?}")]///api/actors/GetActorById/3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c/false
@@ -84,7 +96,7 @@ namespace CloudMovieDatabase.API.Controllers
         // [HttpPut("UnLinkActorAndMovie/{actorId:Guid}/{movieId:Guid}")]
         [HttpPost("UnLinkActorAndMovie")]
         public async Task<IActionResult> UnLinkActorAndMovie(Guid actorId, Guid movieId)
-        { 
+        {
             await _actorMovieService.UnLinkActorAndMovie(actorId, movieId);
             return Ok();
         }

@@ -24,7 +24,7 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<T>> AllAsync(int skip, int take, params Expression<Func<T, object>>[] includes)
+        public async Task<List<T>> AllAsync(int skip, int take, Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _dbContext.Set<T>().Skip(skip).Take(take).AsNoTracking();
 
@@ -33,9 +33,7 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
                 includes.ToList().ForEach(i => query = query.Include(i));
             }
 
-            
-
-            var res =  await query.ToListAsync();
+            var res =  await query.Where(predicate).ToListAsync();
             return res;
         }
 

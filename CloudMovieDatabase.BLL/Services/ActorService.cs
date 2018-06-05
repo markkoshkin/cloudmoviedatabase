@@ -32,11 +32,19 @@ namespace CloudMovieDatabase.BLL.Services
             if (isAttachMovies)
             {
                 var actor = await _actorRepository.GetByIdAsync(id);
+                if (actor == null)
+                {
+                    throw new ArgumentException("Entity not found");
+                }
                 return actor.ConvertToUIModel();
             }
             else
             {
                 var actor = await _actorRepository.FindByAsync(e => e.Id == id);
+                if (actor == null)
+                {
+                    throw new ArgumentException("Entity not found");
+                }
                 return actor.ConvertToUIModel();
             }
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudMovieDatabase.BLL.Converters;
 using CloudMovieDatabase.BLL.Services;
 using CloudMovieDatabase.Models;
 using CloudMovieDatabase.Models.Models.UiModels;
@@ -16,11 +17,13 @@ namespace CloudMovieDatabase.API.Controllers
     {
         private MovieService _movieService;
         private ActorMovieService _actorMovieService;
+        private ActorService _actorService;
 
-        public MovieController(MovieService movieService, ActorMovieService actorMovieService)
+        public MovieController(MovieService movieService, ActorMovieService actorMovieService, ActorService actorService)
         {
             _movieService = movieService;
             _actorMovieService = actorMovieService;
+            _actorService = actorService;
         }
 
         [HttpGet("GetAll")] //api/movies/getall?skip=2&take=15
@@ -34,6 +37,23 @@ namespace CloudMovieDatabase.API.Controllers
         public async Task<MovieUi> GetActorById(Guid id, bool isAttachStarringActros = true)
         {
             return await _movieService.FindByIdAsync(id, isAttachStarringActros);
+        }
+
+        [HttpGet]
+        [Route("GetMoviesByActorId/{id:guid}")]///api/movies/GetById/88b24550-a77d-47e4-ad12-1c36b5760477/false
+        public async Task<List<MovieUi>> GetMoviesByActorId(Guid id)
+        {
+            var actor = await _actorService.FindByIdAsync(id, true);
+            return actor.Filmography.Select(e => e.ConvertToUIModel()).ToList();
+        }
+
+        [HttpGet]
+        [Route("GetMoviesByReleaseDateYear/{year:int}")]///api/movies/GetById/88b24550-a77d-47e4-ad12-1c36b5760477/false
+        public async Task<List<MovieUi>> GetMoviesByReleaseDateYear(int year)
+        {
+            var time = new DateTime(year, 1, 1, 1, 1, 0);
+            var movies = await _movieService.GetAllAsync(0, 10, time);
+            return movies.Select(e => e.ConvertToUIModel()).ToList();
         }
 
         [HttpDelete]

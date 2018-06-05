@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using CloudMovieDatabase.BLL.Converters;
@@ -27,9 +28,12 @@ namespace CloudMovieDatabase.BLL.Services
 
         public async Task<List<Movie>> GetAllAsync(int skip, int take)
         {
-
             return await _movieRepository.AllAsync(skip, take);
+        }
 
+        public async Task<List<Movie>> GetAllAsync(int skip, int take, DateTime year)
+        {
+            return await _movieRepository.AllAsync(skip, take, e => e.Year.Year == year.Year);
         }
 
         public async Task<MovieUi> FindByIdAsync(Guid id, bool isAttachStarringActros)
@@ -37,11 +41,19 @@ namespace CloudMovieDatabase.BLL.Services
             if (isAttachStarringActros)
             {
                 var movie = await _movieRepository.GetByIdAsync(id);
+                if (movie == null)
+                {
+                    throw new  ArgumentException("Entity not found");
+                }
                 return movie.ConvertToUIModel();
             }
             else
             {
                 var movie = await _movieRepository.FindByAsync(e => e.Id == id);
+                if (movie == null)
+                {
+                    throw new ArgumentException("Entity not found");
+                }
                 return movie.ConvertToUIModel();
             }
         }
