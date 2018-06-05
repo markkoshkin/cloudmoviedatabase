@@ -15,10 +15,12 @@ namespace CloudMovieDatabase.API.Controllers
     public class MovieController : Controller
     {
         private MovieService _movieService;
+        private ActorMovieService _actorMovieService;
 
-        public MovieController(MovieService movieService)
+        public MovieController(MovieService movieService, ActorMovieService actorMovieService)
         {
             _movieService = movieService;
+            _actorMovieService = actorMovieService;
         }
 
         [HttpGet("GetAll")] //api/movies/getall?skip=2&take=15
@@ -37,6 +39,7 @@ namespace CloudMovieDatabase.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
+            await _movieService.DeleteByIdAsync(id);
             return Ok();
         }
 
@@ -51,5 +54,13 @@ namespace CloudMovieDatabase.API.Controllers
         {
             return Ok();
         }
+
+        [HttpPut("LinkActroAndMovie/{actorId:Guid}/{movieId:Guid}")]
+        public async Task<IActionResult> LinkActroAndMovie(Guid actorId, Guid movieId)
+        {
+            await _actorMovieService.LinkActorAndMovie(actorId, movieId);
+            return Ok();
+        }
     }
 }
+

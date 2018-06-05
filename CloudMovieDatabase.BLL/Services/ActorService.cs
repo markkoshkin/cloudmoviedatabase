@@ -13,14 +13,16 @@ namespace CloudMovieDatabase.BLL.Services
     {
         private IActorRepository _actorRepository;
         private IMovieRepository _movieRepository;
+        private IActorMovieRepository _actorMovieRepository;
 
-        public ActorService(IActorRepository actorRepository, IMovieRepository movieRepository)
+        public ActorService(IActorRepository actorRepository, IMovieRepository movieRepository, IActorMovieRepository actorMovieRepository)
         {
             _actorRepository = actorRepository;
             _movieRepository = movieRepository;
+            _actorMovieRepository = actorMovieRepository;
         }
 
-        public async Task<List<Actor>> GetAllAsync(int skip, int take, bool isAttachMovies)
+        public async Task<List<Actor>> GetAllAsync(int skip, int take)
         {
             return await _actorRepository.AllAsync(skip, take);
         }
@@ -41,7 +43,7 @@ namespace CloudMovieDatabase.BLL.Services
 
         public async Task DeleteByIdAsync(Guid id)
         {
-            var existedEntity = await FindByIdAsync(id, true);
+            var existedEntity = await _actorRepository.GetByIdAsync(id);
 
             if (existedEntity == null)
             {
@@ -49,41 +51,55 @@ namespace CloudMovieDatabase.BLL.Services
             }
 
             // Due to film can't be without any actors we should check that all related film will have at least one actor after we remove this one
-            foreach (var film in existedEntity.Filmography)
+            foreach (var actorMovie in existedEntity.ActorMovie)
             {
-                var dbFilm = await _movieRepository.FindByAsync(e => e.Id == film.Id, e => e.StarringActros);
-                if (dbFilm.StarringActros.FirstOrDefault(e => e.Id != id) == null)
+                var movie = await _movieRepository.GetByIdAsync(actorMovie.MovieId);
+                if (movie.ActorMovie.Count <= 1)
                 {
-                    throw new ArgumentException($"Can't remove actor with id {id} due to some film will be without actors");
+                    throw new InvalidOperationException("Can't remove actor due to it is last film actor");
                 }
             }
 
-            //remove actor from films
-            foreach (var film in existedEntity.Filmography)
+            //remove actorMovie
+            foreach (var actorMovie in existedEntity.ActorMovie)
             {
-                var dbFilm = await _movieRepository.FindByAsync(e => e.Id == film.Id, e => e.StarringActros);
-                dbFilm.StarringActros.RemoveAt(dbFilm.StarringActros.FindIndex(a => a.Id == id));
-
-                await _movieRepository.EditAsync(dbFilm);
+                var actorMovieDb = await _actorMovieRepository.FindByAsync(e => e.ActorMovieId == actorMovie.ActorMovieId);
+                await _actorMovieRepository.DeleteAsync(actorMovieDb);
             }
 
-            //  await _actorRepository.DeleteAsync(existedEntity);
+            //fetch again to avoid concurrent issues
+            existedEntity = await _actorRepository.GetByIdAsync(id);
+            if (existedEntity != null)
+            {
+                await _actorRepository.DeleteAsync(existedEntity);
+            }
         }
 
-        public async Task UpdateAsync(Actor actor)
+        public async Task UpdateAsync(ActorUi actorUi)
         {
-            var existedEntity = await FindByIdAsync(actor.Id, false);
+            var existedEntity = await _actorRepository.FindByAsync(e => e.Id == actorUi.Id);
             if (existedEntity == null)
             {
-                throw new ArgumentException($"Actor with id : {actor.Id} not found");
+                throw new ArgumentException($"Actor with id : {actorUi.Id} not found");
             }
 
-            await _actorRepository.EditAsync(actor);
+            existedEntity.LastName = actorUi.LastName;
+            existedEntity.FirstName = actorUi.FirstName;
+            existedEntity.Birthday = actorUi.Birthday;
+
+            await _actorRepository.EditAsync(existedEntity);
         }
 
-        public async Task CreateAsync(Actor actor)
+        public async Task CreateAsync(ActorUi actorUi)
         {
-            actor.Id = Guid.NewGuid();
+            var actor = new Actor()
+            {
+                Id = Guid.NewGuid(),
+                Birthday = actorUi.Birthday,
+                FirstName = actorUi.FirstName,
+                LastName = actorUi.LastName
+            };
+
             await _actorRepository.AddAsync(actor);
         }
     }

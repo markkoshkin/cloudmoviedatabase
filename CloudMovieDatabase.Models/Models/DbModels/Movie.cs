@@ -26,9 +26,5 @@ namespace CloudMovieDatabase.Models
         public MovieGenre Genre { get; set; }
 
         public List<ActorMovie> ActorMovie { get; set; }
-
-        [NotMapped]
-        public List<Actor> StarringActros { get; set; }
-
     }
 }

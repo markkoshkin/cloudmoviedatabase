@@ -14,8 +14,9 @@ namespace CloudMovieDatabase.BLL.Services
     {
         private IMovieRepository _movieRepository;
         private IActorRepository _actorRepository;
+        private IActorMovieRepository _actorMovieRepository;
 
-        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository)
+        public MovieService(IMovieRepository movieRepository, IActorRepository actorRepository, IActorMovieRepository actorMovieRepository)
         {
             _movieRepository = movieRepository;
             _actorRepository = actorRepository;
@@ -44,7 +45,7 @@ namespace CloudMovieDatabase.BLL.Services
 
         public async Task DeleteByIdAsync(Guid id)
         {
-            var existedEntity = await FindByIdAsync(id, true);
+            var existedEntity = await _movieRepository.GetByIdAsync(id);
 
             if (existedEntity == null)
             {
@@ -52,15 +53,12 @@ namespace CloudMovieDatabase.BLL.Services
             }
 
             //we need to remove film from actors 
-            foreach (var actor in existedEntity.StarringActros)
+            foreach (var actorMovie in existedEntity.ActorMovie)
             {
-                var dbActor = await _actorRepository.FindByAsync(e => e.Id == actor.Id, e => e.Filmography);
-                dbActor.Filmography.RemoveAt(dbActor.Filmography.FindIndex(a => a.Id == id));
-
-                await _actorRepository.EditAsync(dbActor);
+                await _actorMovieRepository.DeleteAsync(actorMovie);
             }
 
-          //  await _movieRepository.DeleteAsync(existedEntity);
+            await _movieRepository.DeleteAsync(existedEntity);
         }
 
         public async Task UpdateAsync(Movie movie)
@@ -77,10 +75,10 @@ namespace CloudMovieDatabase.BLL.Services
         public async Task CreateAsync(Movie movie)
         {
             movie.Id = Guid.NewGuid();
-            if (!movie.StarringActros.Any())
-            {
-                throw new ArgumentException($"Movie should has at least one actor");
-            }
+            //if (!movie.StarringActros.Any())
+            //{
+            //    throw new ArgumentException($"Movie should has at least one actor");
+            //}
 
             await _movieRepository.AddAsync(movie);
         }

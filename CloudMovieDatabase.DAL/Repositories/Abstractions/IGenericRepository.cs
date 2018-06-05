@@ -18,5 +18,6 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
         Task AddAsync(T entity);
         Task DeleteAsync(T entity);
         Task EditAsync(T entity);
+
     }
 }

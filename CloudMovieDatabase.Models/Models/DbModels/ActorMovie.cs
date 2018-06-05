@@ -6,6 +6,7 @@ namespace CloudMovieDatabase.Models
 {
     public class ActorMovie
     {
+        public Guid ActorMovieId { get; set; }
         public Guid ActorId { get; set; }
         public Actor Actor { get; set; }
 

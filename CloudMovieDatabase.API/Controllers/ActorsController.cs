@@ -15,16 +15,18 @@ namespace CloudMovieDatabase.API.Controllers
     public class ActorsController : Controller
     {
         private ActorService _actorService;
+        private ActorMovieService _actorMovieService;
 
-        public ActorsController(ActorService actorService)
+        public ActorsController(ActorService actorService, ActorMovieService actorMovieService)
         {
             _actorService = actorService;
+            _actorMovieService = actorMovieService;
         }
 
-        [HttpGet("GetAll")]//api/actors/getall?skip=2&take=15&isAttachMovies=true
-        public async Task<List<Actor>> GetAll(int skip = 0, int take = 10, bool isAttachMovies = false)
+        [HttpGet("GetAll")]//api/actors/getall?skip=2&take=15
+        public async Task<List<Actor>> GetAll(int skip = 0, int take = 10)
         {
-            return await _actorService.GetAllAsync(skip, take, isAttachMovies);
+            return await _actorService.GetAllAsync(skip, take);
         }
 
         [HttpGet]
@@ -35,7 +37,7 @@ namespace CloudMovieDatabase.API.Controllers
             return res;
         }
 
-        [HttpDelete]
+        [HttpDelete] //http://localhost:2964/api/actors?id=3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c
         public async Task<IActionResult> Delete(Guid id)
         {
             await _actorService.DeleteByIdAsync(id);
@@ -43,7 +45,7 @@ namespace CloudMovieDatabase.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Actor actor)
+        public async Task<IActionResult> Post(ActorUi actor)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +59,7 @@ namespace CloudMovieDatabase.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(Actor actor)
+        public async Task<IActionResult> Put(ActorUi actor)
         {
             if (ModelState.IsValid)
             {
@@ -69,6 +71,13 @@ namespace CloudMovieDatabase.API.Controllers
                 return BadRequest(ModelState);
             }
 
+        }
+
+        [HttpPut("LinkActroAndMovie/{actorId:Guid}/{movieId:Guid}")]
+        public async Task<IActionResult> LinkActroAndMovie(Guid actorId, Guid movieId)
+        {
+            await _actorMovieService.LinkActorAndMovie(actorId, movieId);
+            return Ok();
         }
     }
 }

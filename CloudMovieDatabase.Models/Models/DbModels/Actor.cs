@@ -26,8 +26,5 @@ namespace CloudMovieDatabase.Models
         public DateTime Birthday { get; set; }
 
         public List<ActorMovie> ActorMovie { get; set; }
-
-        [NotMapped]
-        public  List<Movie> Filmography { get; set; }
     }
 }

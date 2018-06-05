@@ -67,12 +67,12 @@ namespace CloudMovieDatabase.DAL
             {
                 var actorMovies = new List<ActorMovie>()
                 {
-                    new ActorMovie(){ActorId = Guid.Parse("3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c"), MovieId = Guid.Parse("88b24550-a77d-47e4-ad12-1c36b5760477")},
-                    new ActorMovie(){ActorId = Guid.Parse("3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c"), MovieId = Guid.Parse("1c2d6157-c48c-432a-8b7f-331a74df246e")},
-                    new ActorMovie(){ActorId = Guid.Parse("3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c"), MovieId = Guid.Parse("cca94609-68bd-4f54-95a1-5072adf26316")},
+                    new ActorMovie(){ActorMovieId = Guid.NewGuid(), ActorId = Guid.Parse("3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c"), MovieId = Guid.Parse("88b24550-a77d-47e4-ad12-1c36b5760477")},
+                    new ActorMovie(){ActorMovieId = Guid.NewGuid(), ActorId = Guid.Parse("3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c"), MovieId = Guid.Parse("1c2d6157-c48c-432a-8b7f-331a74df246e")},
+                    new ActorMovie(){ActorMovieId = Guid.NewGuid(), ActorId = Guid.Parse("3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c"), MovieId = Guid.Parse("cca94609-68bd-4f54-95a1-5072adf26316")},
 
-                    new ActorMovie(){ActorId = Guid.Parse("c40145bf-8c34-42b9-8e78-92b57cf7d55f"), MovieId = Guid.Parse("88b24550-a77d-47e4-ad12-1c36b5760477")},
-                    new ActorMovie(){ActorId = Guid.Parse("c40145bf-8c34-42b9-8e78-92b57cf7d55f"), MovieId = Guid.Parse("1c2d6157-c48c-432a-8b7f-331a74df246e")},
+                    new ActorMovie(){ActorMovieId = Guid.NewGuid(), ActorId = Guid.Parse("c40145bf-8c34-42b9-8e78-92b57cf7d55f"), MovieId = Guid.Parse("88b24550-a77d-47e4-ad12-1c36b5760477")},
+                    new ActorMovie(){ActorMovieId = Guid.NewGuid(), ActorId = Guid.Parse("c40145bf-8c34-42b9-8e78-92b57cf7d55f"), MovieId = Guid.Parse("1c2d6157-c48c-432a-8b7f-331a74df246e")},
                 };
 
                 foreach (var actorMovie in actorMovies)

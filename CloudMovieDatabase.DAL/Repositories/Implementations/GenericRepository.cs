@@ -35,7 +35,8 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
 
             
 
-            return await query.ToListAsync();
+            var res =  await query.ToListAsync();
+            return res;
         }
 
         public virtual async Task DeleteAsync(T entity)
