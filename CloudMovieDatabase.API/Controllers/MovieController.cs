@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CloudMovieDatabase.BLL.Services;
 using CloudMovieDatabase.Models;
+using CloudMovieDatabase.Models.Models.UiModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,18 +21,18 @@ namespace CloudMovieDatabase.API.Controllers
             _movieService = movieService;
         }
 
-
-        [HttpGet]
-        public async Task<List<Movie>> GetAll(int skip = 0, int take = 10, bool isAttachMovies = false)
+        [HttpGet("GetAll")] //api/movies/getall?skip=2&take=15
+        public async Task<List<Movie>> GetAll(int skip = 0, int take = 10)
         {
-            return await _movieService.GetAllAsync(skip, take, isAttachMovies);
+            return await _movieService.GetAllAsync(skip, take);
         }
 
-        //[HttpGet]
-        //public async Task<Movie> GetActorById(Guid id, bool isAttachMovies = true)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [HttpGet]
+        [Route("GetById/{id:guid}/{isAttachStarringActros:bool?}")]///api/movies/GetById/88b24550-a77d-47e4-ad12-1c36b5760477/false
+        public async Task<MovieUi> GetActorById(Guid id, bool isAttachStarringActros = true)
+        {
+            return await _movieService.FindByIdAsync(id, isAttachStarringActros);
+        }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudMovieDatabase.BLL.Converters;
 using CloudMovieDatabase.DAL.Repositories.Abstractions;
 using CloudMovieDatabase.Models;
+using CloudMovieDatabase.Models.Models.UiModels;
 
 namespace CloudMovieDatabase.BLL.Services
 {
@@ -20,25 +22,20 @@ namespace CloudMovieDatabase.BLL.Services
 
         public async Task<List<Actor>> GetAllAsync(int skip, int take, bool isAttachMovies)
         {
-            if (isAttachMovies)
-            {
-                return await _actorRepository.AllAsync(skip, take, e => e.Filmography);
-            }
-            else
-            {
-                return await _actorRepository.AllAsync(skip, take);
-            }
+            return await _actorRepository.AllAsync(skip, take);
         }
 
-        public async Task<Actor> FindByIdAsync(Guid id, bool isAttachMovies)
+        public async Task<ActorUi> FindByIdAsync(Guid id, bool isAttachMovies)
         {
             if (isAttachMovies)
             {
-                return await _actorRepository.GetByIdAsync(id);
+                var actor = await _actorRepository.GetByIdAsync(id);
+                return actor.ConvertToUIModel();
             }
             else
             {
-                return await _actorRepository.FindByAsync(e => e.Id == id);
+                var actor = await _actorRepository.FindByAsync(e => e.Id == id);
+                return actor.ConvertToUIModel();
             }
         }
 
@@ -70,7 +67,7 @@ namespace CloudMovieDatabase.BLL.Services
                 await _movieRepository.EditAsync(dbFilm);
             }
 
-            await _actorRepository.DeleteAsync(existedEntity);
+            //  await _actorRepository.DeleteAsync(existedEntity);
         }
 
         public async Task UpdateAsync(Actor actor)

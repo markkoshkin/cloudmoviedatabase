@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CloudMovieDatabase.BLL.Services;
 using CloudMovieDatabase.Models;
+using CloudMovieDatabase.Models.Models.UiModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +29,7 @@ namespace CloudMovieDatabase.API.Controllers
 
         [HttpGet]
         [Route("GetActorById/{id:guid}/{isAttachMovies:bool?}")]///api/actors/GetActorById/3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c/false
-        public async Task<Actor> GetActorById(Guid id, bool isAttachMovies = true)
+        public async Task<ActorUi> GetActorById(Guid id, bool isAttachMovies = true)
         {
             var res = await _actorService.FindByIdAsync(id, isAttachMovies);
             return res;

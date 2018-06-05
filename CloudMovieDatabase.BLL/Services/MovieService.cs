@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CloudMovieDatabase.BLL.Converters;
 using CloudMovieDatabase.DAL.Repositories.Abstractions;
 using CloudMovieDatabase.Models;
+using CloudMovieDatabase.Models.Models.UiModels;
 
 namespace CloudMovieDatabase.BLL.Services
 {
@@ -19,27 +21,24 @@ namespace CloudMovieDatabase.BLL.Services
             _actorRepository = actorRepository;
         }
 
-        public async Task<List<Movie>> GetAllAsync(int skip, int take, bool isAttachStarringActros)
+        public async Task<List<Movie>> GetAllAsync(int skip, int take)
         {
-            if (isAttachStarringActros)
-            {
-                return await _movieRepository.AllAsync(skip, take, e => e.StarringActros);
-            }
-            else
-            {
-                return await _movieRepository.AllAsync(skip, take);
-            }
+
+            return await _movieRepository.AllAsync(skip, take);
+
         }
 
-        public async Task<Movie> FindByIdAsync(Guid id, bool isAttachStarringActros)
+        public async Task<MovieUi> FindByIdAsync(Guid id, bool isAttachStarringActros)
         {
             if (isAttachStarringActros)
             {
-                return await _movieRepository.FindByAsync(e => e.Id == id, e => e.StarringActros);
+                var movie = await _movieRepository.GetByIdAsync(id);
+                return movie.ConvertToUIModel();
             }
             else
             {
-                return await _movieRepository.FindByAsync(e => e.Id == id);
+                var movie = await _movieRepository.FindByAsync(e => e.Id == id);
+                return movie.ConvertToUIModel();
             }
         }
 
@@ -61,7 +60,7 @@ namespace CloudMovieDatabase.BLL.Services
                 await _actorRepository.EditAsync(dbActor);
             }
 
-            await _movieRepository.DeleteAsync(existedEntity);
+          //  await _movieRepository.DeleteAsync(existedEntity);
         }
 
         public async Task UpdateAsync(Movie movie)
