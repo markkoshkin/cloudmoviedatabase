@@ -61,26 +61,73 @@ namespace CloudMovieDatabase.BLL.Services
             await _movieRepository.DeleteAsync(existedEntity);
         }
 
-        public async Task UpdateAsync(Movie movie)
+        public async Task UpdateAsync(MovieUi movieUi)
         {
-            var existedEntity = await FindByIdAsync(movie.Id, false);
+            var existedEntity = await _movieRepository.FindByAsync(e => e.Id == movieUi.Id);
             if (existedEntity == null)
             {
-                throw new ArgumentException($"Movie with id : {movie.Id} not found");
+                throw new ArgumentException($"Movie with id : {movieUi.Id} not found");
             }
 
-            await _movieRepository.EditAsync(movie);
+            if (movieUi.GenreId == Guid.Empty)
+            {
+                throw new ArgumentException($"Genre can't be null");
+            }
+
+            existedEntity.GenreId = movieUi.GenreId;
+            existedEntity.Title = movieUi.Title;
+            existedEntity.Year = movieUi.Year;
+
+            await _movieRepository.EditAsync(existedEntity);
         }
 
-        public async Task CreateAsync(Movie movie)
+        public async Task CreateAsync(MovieUi movieUi)
         {
-            movie.Id = Guid.NewGuid();
-            //if (!movie.StarringActros.Any())
-            //{
-            //    throw new ArgumentException($"Movie should has at least one actor");
-            //}
+            var actorIds = new List<Guid>();
+
+            if (movieUi.GenreId == Guid.Empty)
+            {
+                throw new ArgumentException($"Genre can't be null");
+            }
+
+            if (!movieUi.StarringActros.Any())
+            {
+                throw new ArgumentException($"Movie should has at least one actor");
+            }
+
+            foreach (var actor in movieUi.StarringActros)
+            {
+                var existedActor = await _actorRepository.FindByAsync(e => e.Id == actor.Id);
+                if (existedActor == null)
+                {
+                    throw new ArgumentException($"Can't create movie with not existed actor id : {actor.Id}");
+                }
+            }
+
+            var movie = new Movie()
+            {
+                Genre = movieUi.Genre,
+                GenreId = movieUi.GenreId,
+                Id = Guid.NewGuid(),
+                Title = movieUi.Title,
+                Year = movieUi.Year,
+            };
 
             await _movieRepository.AddAsync(movie);
+
+
+            //Link movie to actors 
+            foreach (var actor in movieUi.StarringActros)
+            {
+                var actorMovie = new ActorMovie()
+                {
+                    ActorId = actor.Id,
+                    MovieId = movie.Id,
+                    ActorMovieId = Guid.NewGuid()
+                };
+
+                await _actorMovieRepository.AddAsync(actorMovie);
+            }
         }
     }
 }

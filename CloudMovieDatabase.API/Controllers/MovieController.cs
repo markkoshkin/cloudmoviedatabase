@@ -44,21 +44,46 @@ namespace CloudMovieDatabase.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Movie actor)
+        public async Task<IActionResult> Post(MovieUi movie)
         {
-            return StatusCode(201);
+            if (ModelState.IsValid)
+            {
+                await _movieService.CreateAsync(movie);
+                return StatusCode(201);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(Movie actor)
+        public async Task<IActionResult> Put(MovieUi movie)
         {
+            if (ModelState.IsValid)
+            {
+                await _movieService.UpdateAsync(movie);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        // [HttpPut("LinkActorAndMovie/{actorId:Guid}/{movieId:Guid}")]
+        [HttpPost("LinkActorAndMovie")]
+        public async Task<IActionResult> LinkActorAndMovie(Guid actorId, Guid movieId)
+        {
+            await _actorMovieService.LinkActorAndMovie(actorId, movieId);
             return Ok();
         }
 
-        [HttpPut("LinkActroAndMovie/{actorId:Guid}/{movieId:Guid}")]
-        public async Task<IActionResult> LinkActroAndMovie(Guid actorId, Guid movieId)
+        // [HttpPut("UnLinkActorAndMovie/{actorId:Guid}/{movieId:Guid}")]
+        [HttpPost("UnLinkActorAndMovie")]
+        public async Task<IActionResult> UnLinkActorAndMovie(Guid actorId, Guid movieId)
         {
-            await _actorMovieService.LinkActorAndMovie(actorId, movieId);
+            await _actorMovieService.UnLinkActorAndMovie(actorId, movieId);
             return Ok();
         }
     }

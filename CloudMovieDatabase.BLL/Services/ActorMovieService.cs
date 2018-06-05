@@ -50,5 +50,36 @@ namespace CloudMovieDatabase.BLL.Services
 
             await _actorMovieRepository.AddAsync(actorMovie);
         }
+
+        public async Task UnLinkActorAndMovie(Guid actorId, Guid movieId)
+        {
+            var actor = await _actorRepository.FindByAsync(e => e.Id == actorId);
+            if (actor == null)
+            {
+                throw new ArgumentException($"Actor with id: {actorId} doesn't exist");
+            }
+
+            var movie = await _movieRepository.FindByAsync(e => e.Id == movieId);
+            if (movie == null)
+            {
+                throw new ArgumentException($"Movie with id: {movieId} doesn't exist");
+            }
+
+            var actorMovie = await _actorMovieRepository.FindByAsync(e => e.ActorId == actorId && e.MovieId == movieId);
+            if (actorMovie == null)
+            {
+                throw new ArgumentException($"Actor {actorId} and Movie {movieId} not linked");
+            }
+
+
+            //movie must have at least one actor
+            var anotherActorMovie = await _actorMovieRepository.FindByAsync(e => e.ActorId != actorId && e.MovieId == movieId);
+            if (anotherActorMovie == null)
+            {
+                throw new ArgumentException($"Actor {actorId} and Movie {movieId} not linked");
+            }
+
+            await _actorMovieRepository.DeleteAsync(actorMovie);
+        }
     }
 }

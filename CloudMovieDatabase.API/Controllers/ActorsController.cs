@@ -73,10 +73,19 @@ namespace CloudMovieDatabase.API.Controllers
 
         }
 
-        [HttpPut("LinkActroAndMovie/{actorId:Guid}/{movieId:Guid}")]
-        public async Task<IActionResult> LinkActroAndMovie(Guid actorId, Guid movieId)
+        // [HttpPut("LinkActorAndMovie/{actorId:Guid}/{movieId:Guid}")]
+        [HttpPost("LinkActorAndMovie")]
+        public async Task<IActionResult> LinkActorAndMovie(Guid actorId, Guid movieId)
         {
             await _actorMovieService.LinkActorAndMovie(actorId, movieId);
+            return Ok();
+        }
+
+        // [HttpPut("UnLinkActorAndMovie/{actorId:Guid}/{movieId:Guid}")]
+        [HttpPost("UnLinkActorAndMovie")]
+        public async Task<IActionResult> UnLinkActorAndMovie(Guid actorId, Guid movieId)
+        { 
+            await _actorMovieService.UnLinkActorAndMovie(actorId, movieId);
             return Ok();
         }
     }

@@ -28,6 +28,7 @@ namespace CloudMovieDatabase.BLL.Converters
         {
             return new MovieUi()
             {
+                GenreId = movie.GenreId,
                 Genre = movie.Genre,
                 Title = movie.Title,
                 Year = movie.Year,
