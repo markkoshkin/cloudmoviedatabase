@@ -27,10 +27,11 @@ namespace CloudMovieDatabase.API.Controllers
         }
 
         [HttpGet]
-        [Route("GetActorById/{id:guid}/{isAttachMovies:bool?}")]///api/actors/GetActorById/af432a20-75a5-4e1d-bafc-ede9ac4ba5f4/false
+        [Route("GetActorById/{id:guid}/{isAttachMovies:bool?}")]///api/actors/GetActorById/3a96a2a2-fb1b-4f6a-b840-7fb27a846e8c/false
         public async Task<Actor> GetActorById(Guid id, bool isAttachMovies = true)
         {
-            return await _actorService.FindByIdAsync(id, isAttachMovies);
+            var res = await _actorService.FindByIdAsync(id, isAttachMovies);
+            return res;
         }
 
         [HttpDelete]

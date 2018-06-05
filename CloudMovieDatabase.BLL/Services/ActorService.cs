@@ -34,7 +34,7 @@ namespace CloudMovieDatabase.BLL.Services
         {
             if (isAttachMovies)
             {
-                return await _actorRepository.FindByAsync(e => e.Id == id, e => e.Filmography);
+                return await _actorRepository.GetByIdAsync(id);
             }
             else
             {

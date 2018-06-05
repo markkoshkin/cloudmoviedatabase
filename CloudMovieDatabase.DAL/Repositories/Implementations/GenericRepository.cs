@@ -11,7 +11,7 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
 
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly CloudMovieDatabaseContext _dbContext;
+        protected readonly CloudMovieDatabaseContext _dbContext;
 
         public GenericRepository(CloudMovieDatabaseContext dbContext)
         {
@@ -32,6 +32,8 @@ namespace CloudMovieDatabase.DAL.Repositories.Abstractions
             {
                 includes.ToList().ForEach(i => query = query.Include(i));
             }
+
+            
 
             return await query.ToListAsync();
         }
