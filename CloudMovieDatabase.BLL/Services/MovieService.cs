@@ -43,7 +43,7 @@ namespace CloudMovieDatabase.BLL.Services
                 var movie = await _movieRepository.GetByIdAsync(id);
                 if (movie == null)
                 {
-                    throw new  ArgumentException("Entity not found");
+                    throw new ArgumentException("Entity not found");
                 }
                 return movie.ConvertToUIModel();
             }
@@ -102,7 +102,7 @@ namespace CloudMovieDatabase.BLL.Services
             await _movieRepository.EditAsync(existedEntity);
         }
 
-        public async Task CreateAsync(MovieUi movieUi)
+        public async Task CreateAsync(MovieCreate movieUi)
         {
             var actorIds = new List<Guid>();
 
@@ -111,18 +111,15 @@ namespace CloudMovieDatabase.BLL.Services
                 throw new ArgumentException($"Genre can't be null");
             }
 
-            if (!movieUi.StarringActros.Any())
+            if (movieUi.FirstActor == Guid.Empty)
             {
                 throw new ArgumentException($"Movie should has at least one actor");
             }
 
-            foreach (var actor in movieUi.StarringActros)
+            var existedActor = await _actorRepository.FindByAsync(e => e.Id == movieUi.FirstActor);
+            if (existedActor == null)
             {
-                var existedActor = await _actorRepository.FindByAsync(e => e.Id == actor.Id);
-                if (existedActor == null)
-                {
-                    throw new ArgumentException($"Can't create movie with not existed actor id : {actor.Id}");
-                }
+                throw new ArgumentException($"Can't create movie with not existed actor id : {movieUi.FirstActor}");
             }
 
             var movie = new Movie()
@@ -138,17 +135,14 @@ namespace CloudMovieDatabase.BLL.Services
 
 
             //Link movie to actors 
-            foreach (var actor in movieUi.StarringActros)
+            var actorMovie = new ActorMovie()
             {
-                var actorMovie = new ActorMovie()
-                {
-                    ActorId = actor.Id,
-                    MovieId = movie.Id,
-                    ActorMovieId = Guid.NewGuid()
-                };
+                ActorId = movieUi.FirstActor,
+                MovieId = movie.Id,
+                ActorMovieId = Guid.NewGuid()
+            };
 
-                await _actorMovieRepository.AddAsync(actorMovie);
-            }
+            await _actorMovieRepository.AddAsync(actorMovie);
         }
     }
 }

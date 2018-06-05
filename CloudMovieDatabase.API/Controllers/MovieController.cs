@@ -64,7 +64,7 @@ namespace CloudMovieDatabase.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(MovieUi movie)
+        public async Task<IActionResult> Post(MovieCreate movie)
         {
             if (ModelState.IsValid)
             {
